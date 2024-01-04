@@ -1,0 +1,21 @@
+import { ExistingDownload } from "./FindExistingDownloads";
+import { EventType } from "./FindTorrents";
+export type Event = {
+    monitored: boolean;
+    eventNumber: number;
+    eventName: string;
+    uid: string;
+    fightNight: boolean;
+    onESPN: boolean;
+    eventType: EventType;
+    resolution?: undefined;
+    date: Date;
+    eventURL: string;
+    downloads: any[];
+    lookForDownload: boolean;
+};
+export declare let allDownloads: ExistingDownload[];
+export declare let allEvents: Event[];
+export declare function findEvents(): Promise<void>;
+export declare function markExistingDownloads(existingDownloads: any): void;
+export declare function loadEvents(): Promise<void>;

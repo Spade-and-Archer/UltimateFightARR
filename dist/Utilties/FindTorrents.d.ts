@@ -1,4 +1,4 @@
-export type EventType = ("prelims" | "main" | "earlyPrelims");
+export type EventType = ("prelims" | "main" | "earlyPrelims" | "countdown");
 export type Result = {
     "guid": "https://1337x.to/torrent/5341563/UFC-277-Prelims-1080p-WEB-DL-H264-Fight-BB/";
     "age": 521;
@@ -29,22 +29,24 @@ export type Result = {
     "indexerPriority"?: number;
     "eventType"?: EventType;
 };
-export declare function findTorrents({ eventDate, eventName, eventNumber, acceptableQuality, maxSizeBytes, minSeeders, eventType }: {
+export declare function findTorrents({ eventDate, eventName, fightNight, eventNumber, acceptableQuality, maxSizeBytes, minSeeders, eventType }: {
     eventDate?: Date;
+    fightNight?: boolean;
     eventName?: string;
-    eventNumber: number;
+    eventNumber?: number;
     acceptableQuality?: string[];
     maxSizeBytes?: number;
     minSeeders?: number;
     eventType?: EventType;
-}): Promise<void>;
+}): Promise<any[]>;
 export declare function populateResultMetadata(results: Result[]): Promise<Result[]>;
-export declare function filterTorrents({ eventDate, eventName, eventNumber, acceptableQuality, maxSizeBytes, minSeeders }: {
+export declare function filterTorrents({ eventDate, eventName, eventNumber, acceptableQuality, maxSizeBytes, minSeeders, eventType, }: {
     eventDate: any;
     eventName: any;
     eventNumber: any;
     acceptableQuality: any;
     maxSizeBytes: any;
     minSeeders: any;
+    eventType: any;
 }, results: Result[]): Result[];
-export declare function sortTorrents(results: Result[]): void;
+export declare function sortTorrents(results: Result[]): Result[];
