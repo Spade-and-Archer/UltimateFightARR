@@ -1,0 +1,50 @@
+export type EventType = ("prelims" | "main" | "earlyPrelims");
+export type Result = {
+    "guid": "https://1337x.to/torrent/5341563/UFC-277-Prelims-1080p-WEB-DL-H264-Fight-BB/";
+    "age": 521;
+    "ageHours": number;
+    "ageMinutes": number;
+    "size": number;
+    "indexerId": number;
+    "indexer": string;
+    "title": string;
+    "sortTitle": string;
+    "imdbId": number;
+    "tmdbId": number;
+    "tvdbId": number;
+    "tvMazeId": number;
+    "publishDate": string;
+    "downloadUrl": string;
+    "infoUrl": string;
+    "indexerFlags": string[];
+    "categories": {
+        "id": number;
+        "name": string;
+        "subCategories": string[];
+    }[];
+    "seeders": number;
+    "leechers": number;
+    "protocol": string;
+    "fileName": string;
+    "indexerPriority"?: number;
+    "eventType"?: EventType;
+};
+export declare function findTorrents({ eventDate, eventName, eventNumber, acceptableQuality, maxSizeBytes, minSeeders, eventType }: {
+    eventDate?: Date;
+    eventName?: string;
+    eventNumber: number;
+    acceptableQuality?: string[];
+    maxSizeBytes?: number;
+    minSeeders?: number;
+    eventType?: EventType;
+}): Promise<void>;
+export declare function populateResultMetadata(results: Result[]): Promise<Result[]>;
+export declare function filterTorrents({ eventDate, eventName, eventNumber, acceptableQuality, maxSizeBytes, minSeeders }: {
+    eventDate: any;
+    eventName: any;
+    eventNumber: any;
+    acceptableQuality: any;
+    maxSizeBytes: any;
+    minSeeders: any;
+}, results: Result[]): Result[];
+export declare function sortTorrents(results: Result[]): void;

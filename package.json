@@ -1,0 +1,63 @@
+{
+    "name": "verdi-backend",
+    "description": "Verdi Backend",
+    "scripts": {
+        "build": "npx rollup -c rollup.config.mjs",
+        "build:continuous": "npx rollup -c rollup.config.mjs -w",
+        "clean": "rimraf dist ; rimraf .rollup.cache",
+        "format": "eslint --fix --quiet . &&  prettier --write --loglevel silent .",
+        "fresh-install": "rm -rf node_modules && rm -rf package-lock.json && npm install",
+        "lint": "eslint . && tsc && tsc-strict",
+        "start": "node --max_old_space_size=3584 dist/index.dev.js",
+        "start:debug": "cross-env debug=true PORT=4000 node dist/index.dev.js",
+        "start:liveDebug": "cross-env debug=true PORT=4000 nodemon dist/index.dev.js",
+        "start:test": "cross-env NODE_ENV=test debug=true PORT=4500 node dist/index.dev.js"
+    },
+    "nodemonConfig": {
+        "watch": [
+            "./dist/index.dev.js",
+            "./dist/index.min.js"
+        ],
+        "delay": 5000
+    },
+    "dependencies": {
+        "@robertklep/qbittorrent": "^1.0.1",
+        "@types/node": "^17",
+        "@typescript-eslint/eslint-plugin": "^5.59.2",
+        "@typescript-eslint/parser": "^5.59.2",
+        "axios": "^0.21.1",
+        "cheerio": "^1.0.0-rc.12",
+        "cors": "^2.8.5",
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "node-fetch": "2.6.7"
+    },
+    "devDependencies": {
+        "@rollup/plugin-json": "^5.0.2",
+        "@rollup/plugin-terser": "^0.1.0",
+        "@rollup/plugin-typescript": "^10.0.1",
+        "@types/cors": "^2.8.12",
+        "@types/express": "^4.17.13",
+        "@types/jest": "*",
+        "cross-env": "^7.0.3",
+        "eslint": "^8.45.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-import-resolver-typescript": "^3.5.5",
+        "eslint-plugin-import": "^2.27.5",
+        "jest": "^29.0.0",
+        "prettier": "^2.8.8",
+        "rimraf": "^3.0.2",
+        "rollup": "^3.7.0",
+        "ts-jest": "^29.1.1",
+        "typescript": "^5.0.4",
+        "typescript-strict-plugin": "^1.1.0"
+    },
+    "engines": {
+        "node": "18.17.0",
+        "npm": "9.8.1"
+    },
+    "volta": {
+        "node": "18.17.0",
+        "npm": "9.8.1"
+    }
+}
