@@ -32,7 +32,36 @@ How to setup:
 This can be done with any tool you like, but an easy way is to download off of github and extract the archive
 2) Open command prompt and `cd` to wherever you put the source code. Should be something like
 `C:/Users/Me/FightARR`.
-3) type the command `npm install` and wait for it to complete
-4) create a file name `.env` and put it in the `FightARR` folder.
-5) copy the above template into the `.env` file and then adjust it so that it 
-works for you.
+3) Type the command `npm install` and wait for it to complete
+4) Create a file name `.env` and put it in the `FightARR` folder.
+5) Copy the above template into the `.env` file and then adjust it so that it 
+works for you (e.g. fill in your API key for ProwlARR)
+6) Double check that .env file, make sure the downloads are going into the right place
+and that you have selected how many days back you want to look for fights and what kinds
+of fights you want.
+7) Run the command `npm run start` This will begin the process of looking for fights and downloading them
+
+Set up a task in windows task scheduler or another program to automatically run that command
+in the source directory every day or every few days or whatever to stay up to date.
+
+Some notes:
+
+ - this uses wikipedia as a data source. So if wikipedia goes out of date on the fights,
+this tool will start to lag. I know that's insane, but it is genuinely the best source of data for this
+ - This tool will not allow imports. If you already have a collection of 100 fights it's probably best that you
+just set up plex or Kodi or whatever to look in both your original folder and a new folder for this program.
+ - This tool determines what fights have been downloaded based on what folders have been created in it's download
+directory. An empty folder still counts. So do with that knowledge what you will.
+ - This tool does not have robust tools to retry downloads. If it downloads the wrong thing once and you
+delete the folder and tell it to try again, it will probably just try to download the exact same thing
+again.
+
+
+Ways to improve
+
+- I want to add a UI
+
+- I want to think about adding support for other fighting sports
+
+- I want to add better handling of problem downloads, detecting that a download has failed and trying again with 
+another torrent.
