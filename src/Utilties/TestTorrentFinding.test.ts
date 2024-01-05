@@ -4,6 +4,7 @@ import {findEvents} from "./FindEvents";
 import {DownloadAllMonitoredEvents} from "../DownloadAllMonitoredEvents";
 import {loginToQBit} from "./AddDownload";
 import {getEventInfoFromFileName} from "./FindExistingDownloads";
+import {downloadAsync} from "./AddPostersToDownloads";
 
 
 jest.setTimeout(1000000);
@@ -58,6 +59,17 @@ describe("TestTorrentFinding tests", () => {
     test("Downlaod all", async () => {
         const results = await DownloadAllMonitoredEvents();
         console.log(results);
+    });
+
+    test("Downlaod one image", async () => {
+        await downloadAsync(
+            "https://upload.wikimedia.org/wikipedia/en/thumb/2/2f/UFC294poster.jpg/220px-UFC294poster.jpg",
+            `H:\\UFC\\UFC 294 main 1080p 21 10 2023 Makhachev vs Volkanovski 2\\UFC.294.Makhachev.Vs.Volkanovski.2.1080p.HDTV.AAC.H264-Ali[TGx]\\poster.jpg`
+        );
+        await downloadAsync(
+            "https://upload.wikimedia.org/wikipedia/en/thumb/2/2f/UFC294poster.jpg/220px-UFC294poster.jpg",
+            `H:\\UFC\\UFC 294 main 1080p 21 10 2023 Makhachev vs Volkanovski 2\\poster.jpg`
+        );
     });
 
 });

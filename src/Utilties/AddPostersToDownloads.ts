@@ -19,13 +19,14 @@ export async function addPosterToDownload(download : ExistingDownload){
         console.warn("Failed to find poster")
         return;
     }
-    let promises = [];
-    posterPaths.forEach((path)=>{
-        promises.push(addPosterAtPath(download, path, posterURL))
-
-    })
-    await Promise.allSettled(promises);
-    await sleep(3000);
+    for(let i = 0; i < posterPaths.length; i++){
+        await addPosterAtPath(download, posterPaths[i], posterURL).catch((e)=>{
+            console.warn("error downloading poster")
+            console.warn(e);
+        })
+        await sleep(1000);
+    }
+    await sleep(10000);
 }
 export async function sleep(millis: number): Promise<void> {
     await timeout(millis);
@@ -47,7 +48,9 @@ export async function addPosterAtPath(download: ExistingDownload, path: string, 
         return;
     }
     let posterFileExtension = /(?:\.([^.]+))?$/.exec(posterURL)[1];
-
+    if(!path.endsWith("\\")){
+        path = path + "\\";
+    }
     await downloadAsync(posterURL, `${path}poster.${posterFileExtension}`);
 }
 
@@ -72,29 +75,28 @@ const getFiles = source =>
         .filter(dirent => !dirent.isDirectory())
         .map(dirent => dirent.name)
 
-async function downloadAsync(url, dest){
-    return new Promise((resolve, reject) => {
-        download(url, dest, (err, script) => {
-            if (err) reject(err);
-            else resolve(script);
-        });
-    });
+let sempaphor = false;
+export async function downloadAsync(url, dest){
+    return download(url, dest, ()=>true);
 }
-let download = function (url, dest, cb) {
-    let file = fs.createWriteStream(dest);
-    let request = https
-        .get(url, function (response) {
-            response.pipe(file);
-            file.on('finish', function () {
-                file.close(cb);
-            });
-        })
-        .on('error', function (err) {
-            fs.unlink(dest,()=>true); // Delete the file async if there is an error
-            if (cb) cb(err.message);
+let download = function (url, filepath, cb) {
+    return new Promise((resolve, reject) => {
+        https.get(
+            url,
+            {
+                headers: {
+                    'User-Agent':  "UltimateFightARR/0.0 (https://github.com/Spade-and-Archer/UltimateFightARR; andy.tewfik@gmail.com) NodeHTTPS",
+                },
+        }, (res) => {
+            if (res.statusCode === 200) {
+                res.pipe(fs.createWriteStream(filepath))
+                    .on('error', reject)
+                    .once('close', () => resolve(filepath));
+            } else {
+                // Consume response data to free up memory
+                res.resume();
+                reject(new Error(`Request Failed With a Status Code: ${res.statusCode}`));
+            }
         });
-
-    request.on('error', function (err) {
-        console.log(err);
     });
 };
