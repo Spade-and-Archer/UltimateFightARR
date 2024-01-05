@@ -28,6 +28,11 @@ info on how to set this up. This will always be a requirement.
 
 How to setup:
 
+
+## Warning:
+
+Do not set this to run automatically more than once per day. 
+
 1) Clone the repo to a folder on your computer. Do not use the same location that you will store fights.
 This can be done with any tool you like, but an easy way is to download off of github and extract the archive
 2) Open command prompt and `cd` to wherever you put the source code. Should be something like
@@ -42,7 +47,8 @@ of fights you want.
 7) Run the command `npm run start` This will begin the process of looking for fights and downloading them
 
 Set up a task in windows task scheduler or another program to automatically run that command
-in the source directory every day or every few days or whatever to stay up to date.
+in the source directory every day or every few days. **Do not set the frequency higher than once per day.** 
+We want to be polite to sites like Wikipedia and the indexers that you have configured in ProwlARR. 
 
 Some notes:
 
@@ -65,3 +71,4 @@ Ways to improve
 
 - I want to add better handling of problem downloads, detecting that a download has failed and trying again with 
 another torrent.
+

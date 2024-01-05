@@ -8,14 +8,18 @@ export async function DownloadAllMonitoredEvents(){
     let eventsPendingDownload = allEvents.filter((e)=>{
         return e.lookForDownload
     });
-
+    let areDownloads = false;
     for(let i =0; i < eventsPendingDownload.length; i++){
         let event = eventsPendingDownload[i];
         if(!event.downloads.some((d)=>{
             return d.eventType === "main"
         })){
             await downloadEvent(event, "main");
+            areDownloads = true;
         }
+    }
+    if(areDownloads){
+        await loadEvents();
     }
     for(let i = 0; i < allDownloads.length; i++){
         await addPosterToDownload(allDownloads[i]);

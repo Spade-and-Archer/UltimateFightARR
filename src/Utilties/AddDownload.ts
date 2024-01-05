@@ -17,13 +17,16 @@ export async function loginToQBit(){
     }
 
 }
-export async function AddDownload(downloadURL, downloadPath){
+export async function AddDownload(downloadURL, downloadPath, name=undefined){
     await loginToQBit()
-
-    await client.torrents.add({
+    let options: { savepath: any; urls: any; root_folder: string; category: string, rename?:string} = {
         urls: downloadURL,
         savepath: downloadPath,
         category: "UFC",
         root_folder: "false",
-    })
+    }
+    if(name){
+        options.rename = name;
+    }
+    await client.torrents.add(options);
 }

@@ -16,14 +16,15 @@ export async function downloadEvent(event: Event, eventType: EventType="main"){
     });
     if(torrents.length > 0){
         let bestResult = torrents[0];
-
-        let savePath = `${process.env.DOWNLOAD_DIRECTORY}\\${generateFileNameFromEventInfo(event, eventType)}\\`
+        let name = generateFileNameFromEventInfo(event, eventType)
+        let savePath = `${process.env.DOWNLOAD_DIRECTORY}\\${name}\\`
         if (!fs.existsSync(savePath)){
             fs.mkdirSync(savePath);
         }
         await AddDownload(
             bestResult.downloadUrl,
-            savePath
+            savePath,
+            name
         )
     }
 
