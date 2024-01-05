@@ -17,7 +17,7 @@ QBIT_API_PASS=password
 QBIT_API_PORT=8080
 ```
 
-Prerequisits:
+# Prerequisits:
 
  - QBittorrent or a compatible torrenting client. Feel free to create a PR if you
 want to add another torrenting client but I probably won't do it. The relevant file
@@ -26,10 +26,9 @@ to modify is /src/Utilities/AddDownload.ts
 info on how to set this up. This will always be a requirement.
  - NodeJS v18+ and npm
 
-How to setup:
+# How to setup:
 
-
-## Warning:
+**Warning:**
 
 Do not set this to run automatically more than once per day. 
 
@@ -50,7 +49,7 @@ Set up a task in windows task scheduler or another program to automatically run 
 in the source directory every day or every few days. **Do not set the frequency higher than once per day.** 
 We want to be polite to sites like Wikipedia and the indexers that you have configured in ProwlARR. 
 
-Some notes:
+# Some notes:
 
  - this uses wikipedia as a data source. So if wikipedia goes out of date on the fights,
 this tool will start to lag. I know that's insane, but it is genuinely the best source of data for this
@@ -63,7 +62,7 @@ delete the folder and tell it to try again, it will probably just try to downloa
 again.
 
 
-Ways to improve
+# Ways to improve
 
 - I want to add a UI
 
