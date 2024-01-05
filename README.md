@@ -17,7 +17,7 @@ QBIT_API_PASS=password
 QBIT_API_PORT=8080
 ```
 
-# Prerequisits:
+# Prerequisites:
 
  - QBittorrent or a compatible torrenting client. Feel free to create a PR if you
 want to add another torrenting client but I probably won't do it. The relevant file
