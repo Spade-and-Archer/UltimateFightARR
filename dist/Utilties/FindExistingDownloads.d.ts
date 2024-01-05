@@ -3,6 +3,7 @@ import { EventType } from "./FindTorrents";
 export type ExistingDownload = {
     fightNight: boolean;
     onESPN: boolean;
+    onABC: boolean;
     eventType: EventType;
     resolution: string;
     eventNumber?: number;

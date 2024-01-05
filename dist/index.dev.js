@@ -41,7 +41,7 @@ function findExistingDownloads(directory) {
 }
 function getEventInfoFromFileName(folderName, directory) {
     try {
-        let regex = /UFC ([\d]+|FN|ESPN) (\w+) (\d+[ikp]) (\d+) (\d+) (\d+) (.*)/;
+        let regex = /UFC ([\d]+|FN|ESPN|ABC) (\w+) (\d+[ikp]) (\d+) (\d+) (\d+) (.*)/;
         let [, eventNumber, eventType, resolution, day, month, year, name] = folderName.match(regex);
         let dateOfEvent = new Date(year, month - 1, day);
         let ppvEvent = false;
@@ -59,6 +59,7 @@ function getEventInfoFromFileName(folderName, directory) {
         return {
             fightNight: eventNumber === "FN",
             onESPN: eventNumber === "ESPN",
+            onABC: eventNumber === "ABC",
             eventType: eventType,
             resolution: resolution,
             eventNumber: ppvEvent ? eventNumber : undefined,
@@ -81,6 +82,9 @@ function generateFileNameFromEventInfo(event, eventType = "main", qualityString 
     }
     else if (event.onESPN) {
         string += " ESPN";
+    }
+    else if (event.onABC) {
+        string += " ABC";
     }
     else {
         string += ` ${event.eventNumber}`;
@@ -571,6 +575,9 @@ async function DownloadAllMonitoredEvents() {
         }
     }
     if (areDownloads) {
+        // waiting for torrent client to populate folders
+        console.log("waiting 5 seconds for torrent client to populate folder structure");
+        await sleep(5000);
         await loadEvents();
     }
     for (let i = 0; i < allDownloads.length; i++) {
