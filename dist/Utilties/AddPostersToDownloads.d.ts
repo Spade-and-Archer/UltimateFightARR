@@ -6,3 +6,4 @@ export declare function timeout(millis: number): Promise<void>;
 export declare function isPosterNeededAtPath(path: any): boolean;
 export declare function addPosterAtPath(download: ExistingDownload, path: string, posterURL: any): Promise<void>;
 export declare function getPosterLinkForEvent(event: Event): Promise<string>;
+export declare function downloadAsync(url: any, dest: any): Promise<unknown>;

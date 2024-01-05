@@ -430,14 +430,18 @@ async function loginToQBit() {
         await client.app.version();
     }
 }
-async function AddDownload(downloadURL, downloadPath) {
+async function AddDownload(downloadURL, downloadPath, name = undefined) {
     await loginToQBit();
-    await client.torrents.add({
+    let options = {
         urls: downloadURL,
         savepath: downloadPath,
         category: "UFC",
         root_folder: "false",
-    });
+    };
+    if (name) {
+        options.rename = name;
+    }
+    await client.torrents.add(options);
 }
 
 async function downloadEvent(event, eventType = "main") {
@@ -453,11 +457,12 @@ async function downloadEvent(event, eventType = "main") {
     });
     if (torrents.length > 0) {
         let bestResult = torrents[0];
-        let savePath = `${process.env.DOWNLOAD_DIRECTORY}\\${generateFileNameFromEventInfo(event, eventType)}\\`;
+        let name = generateFileNameFromEventInfo(event, eventType);
+        let savePath = `${process.env.DOWNLOAD_DIRECTORY}\\${name}\\`;
         if (!fs__namespace.existsSync(savePath)) {
             fs__namespace.mkdirSync(savePath);
         }
-        await AddDownload(bestResult.downloadUrl, savePath);
+        await AddDownload(bestResult.downloadUrl, savePath, name);
     }
 }
 
@@ -476,12 +481,14 @@ async function addPosterToDownload(download) {
         console.warn("Failed to find poster");
         return;
     }
-    let promises = [];
-    posterPaths.forEach((path) => {
-        promises.push(addPosterAtPath(download, path, posterURL));
-    });
-    await Promise.allSettled(promises);
-    await sleep(3000);
+    for (let i = 0; i < posterPaths.length; i++) {
+        await addPosterAtPath(download, posterPaths[i], posterURL).catch((e) => {
+            console.warn("error downloading poster");
+            console.warn(e);
+        });
+        await sleep(1000);
+    }
+    await sleep(10000);
 }
 async function sleep(millis) {
     await timeout(millis);
@@ -502,6 +509,9 @@ async function addPosterAtPath(download, path, posterURL) {
         return;
     }
     let posterFileExtension = /(?:\.([^.]+))?$/.exec(posterURL)[1];
+    if (!path.endsWith("\\")) {
+        path = path + "\\";
+    }
     await downloadAsync(posterURL, `${path}poster.${posterFileExtension}`);
 }
 async function getPosterLinkForEvent(event) {
@@ -522,31 +532,26 @@ const getFiles = source => fs__namespace.readdirSync(source, { withFileTypes: tr
     .filter(dirent => !dirent.isDirectory())
     .map(dirent => dirent.name);
 async function downloadAsync(url, dest) {
-    return new Promise((resolve, reject) => {
-        download(url, dest, (err, script) => {
-            if (err)
-                reject(err);
-            else
-                resolve(script);
-        });
-    });
+    return download(url, dest);
 }
-let download = function (url, dest, cb) {
-    let file = fs__namespace.createWriteStream(dest);
-    let request = https
-        .get(url, function (response) {
-        response.pipe(file);
-        file.on('finish', function () {
-            file.close(cb);
+let download = function (url, filepath, cb) {
+    return new Promise((resolve, reject) => {
+        https.get(url, {
+            headers: {
+                'User-Agent': "UltimateFightARR/0.0 (https://github.com/Spade-and-Archer/UltimateFightARR; andy.tewfik@gmail.com) NodeHTTPS",
+            },
+        }, (res) => {
+            if (res.statusCode === 200) {
+                res.pipe(fs__namespace.createWriteStream(filepath))
+                    .on('error', reject)
+                    .once('close', () => resolve(filepath));
+            }
+            else {
+                // Consume response data to free up memory
+                res.resume();
+                reject(new Error(`Request Failed With a Status Code: ${res.statusCode}`));
+            }
         });
-    })
-        .on('error', function (err) {
-        fs__namespace.unlink(dest, () => true); // Delete the file async if there is an error
-        if (cb)
-            cb(err.message);
-    });
-    request.on('error', function (err) {
-        console.log(err);
     });
 };
 
@@ -555,13 +560,18 @@ async function DownloadAllMonitoredEvents() {
     let eventsPendingDownload = allEvents.filter((e) => {
         return e.lookForDownload;
     });
+    let areDownloads = false;
     for (let i = 0; i < eventsPendingDownload.length; i++) {
         let event = eventsPendingDownload[i];
         if (!event.downloads.some((d) => {
             return d.eventType === "main";
         })) {
             await downloadEvent(event, "main");
+            areDownloads = true;
         }
+    }
+    if (areDownloads) {
+        await loadEvents();
     }
     for (let i = 0; i < allDownloads.length; i++) {
         await addPosterToDownload(allDownloads[i]);
