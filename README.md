@@ -1,6 +1,6 @@
 # UltimateFightARR
 
-An ARR integration that downloads UFC fights. This only does UFC, nothing else. All options
+An ARR integration that allows bittorrent users to automatically grab UFC fights. This only does UFC, nothing else. All options
 must be specified in a .env file in the main directory. An example is below:
 
 ```env
