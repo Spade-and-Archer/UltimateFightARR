@@ -9,6 +9,7 @@ export type Event = {
     eventName: string,
     uid: string,
     fightNight: boolean,
+    onABC: boolean,
     onESPN: boolean,
     eventType: EventType,
     resolution?: undefined,

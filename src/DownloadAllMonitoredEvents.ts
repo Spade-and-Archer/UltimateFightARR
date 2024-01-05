@@ -1,7 +1,7 @@
 import {allDownloads, allEvents, loadEvents} from "./Utilties/FindEvents";
 import {findTorrents} from "./Utilties/FindTorrents";
 import {downloadEvent} from "./Utilties/DownloadEvent";
-import {addPosterToDownload} from "./Utilties/AddPostersToDownloads";
+import {addPosterToDownload, sleep} from "./Utilties/AddPostersToDownloads";
 
 export async function DownloadAllMonitoredEvents(){
     await loadEvents();
@@ -18,7 +18,11 @@ export async function DownloadAllMonitoredEvents(){
             areDownloads = true;
         }
     }
+
     if(areDownloads){
+        // waiting for torrent client to populate folders
+        console.log("waiting 5 seconds for torrent client to populate folder structure");
+        await sleep(5000)
         await loadEvents();
     }
     for(let i = 0; i < allDownloads.length; i++){

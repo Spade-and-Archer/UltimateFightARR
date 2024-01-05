@@ -7,6 +7,7 @@ import {EventType} from "./FindTorrents";
 export type ExistingDownload = {
     fightNight: boolean,
     onESPN: boolean,
+    onABC: boolean,
     eventType: EventType,
     resolution: string,
     eventNumber?: number ,
@@ -28,7 +29,7 @@ export function findExistingDownloads(directory) : ExistingDownload[]{
 
 export function getEventInfoFromFileName(folderName, directory) : ExistingDownload {
     try{
-        let regex = /UFC ([\d]+|FN|ESPN) (\w+) (\d+[ikp]) (\d+) (\d+) (\d+) (.*)/;
+        let regex = /UFC ([\d]+|FN|ESPN|ABC) (\w+) (\d+[ikp]) (\d+) (\d+) (\d+) (.*)/;
         let [, eventNumber, eventType, resolution, day, month, year, name] = folderName.match(regex);
         let dateOfEvent = new Date(year, month - 1, day);
         let ppvEvent = false;
@@ -46,6 +47,7 @@ export function getEventInfoFromFileName(folderName, directory) : ExistingDownlo
         return {
             fightNight: eventNumber === "FN",
             onESPN: eventNumber === "ESPN",
+            onABC: eventNumber === "ABC",
             eventType: eventType,
             resolution: resolution,
             eventNumber: ppvEvent ? eventNumber : undefined ,
@@ -70,6 +72,9 @@ export function generateFileNameFromEventInfo(event: Event, eventType: EventType
     }
     else if(event.onESPN){
         string += " ESPN"
+    }
+    else if(event.onABC){
+        string += " ABC"
     }
     else{
         string += ` ${event.eventNumber}`
