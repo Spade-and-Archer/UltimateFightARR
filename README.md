@@ -14,7 +14,7 @@ GET_ON_ESPN=false
 DOWNLOAD_DIRECTORY=H:\UFC
 QBIT_API_USERNAME=admin
 QBIT_API_PASS=password
-QBIT_API_PORT=8080
+QBIT_URL=http://localhost:8080
 ```
 
 # Prerequisites:
@@ -70,4 +70,8 @@ again.
 
 - I want to add better handling of problem downloads, detecting that a download has failed and trying again with 
 another torrent.
+
+- I want to add a proper database so that it can track what it's downloaded based on things other than
+folder name. Because that's hacky even for me.
+
 

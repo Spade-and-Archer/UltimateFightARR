@@ -176,6 +176,7 @@ async function findEvents() {
         catch (e) {
             console.warn("Error parsing table row");
         }
+        return undefined;
     });
     allEvents = newAllEvents;
     console.log(newAllEvents);
