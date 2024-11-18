@@ -31,12 +31,20 @@ var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
 
 function findExistingDownloads(directory) {
     let folders = fs__namespace.readdirSync(directory);
+    // let nonEmptyFolders = folders.filter(f => {
+    //     fs.readdirSync(directory);
+    //
+    // });
     let downloadedEvents = folders.map((folderName) => {
         return getEventInfoFromFileName(folderName, directory);
     });
     downloadedEvents = downloadedEvents.filter((de) => {
         return de !== undefined;
     });
+    // downloadedEvents = downloadedEvents.filter((de)=>{
+    //
+    //     return de !== undefined;
+    // })
     return downloadedEvents;
 }
 function getEventInfoFromFileName(folderName, directory) {
@@ -176,7 +184,6 @@ async function findEvents() {
         catch (e) {
             console.warn("Error parsing table row");
         }
-        return undefined;
     });
     allEvents = newAllEvents;
     console.log(newAllEvents);
@@ -430,9 +437,10 @@ function sortTorrents(results) {
 let client = undefined;
 async function loginToQBit() {
     if (!client) {
-        client = new qbittorrent.qBittorrentClient(`http://localhost:${process__namespace.env.QBIT_API_PORT}`, process__namespace.env.QBIT_API_USERNAME, process__namespace.env.QBIT_API_PASS);
+        client = new qbittorrent.qBittorrentClient(process__namespace.env.QBIT_URL ?? `http://localhost:${process__namespace.env.QBIT_API_PORT}`, process__namespace.env.QBIT_API_USERNAME, process__namespace.env.QBIT_API_PASS);
         await client.auth.login(process__namespace.env.QBIT_API_USERNAME, process__namespace.env.QBIT_API_PASS);
-        await client.app.version();
+        let version = await client.app.version();
+        console.log("connected to Qbit with version:", version);
     }
 }
 async function AddDownload(downloadURL, downloadPath, name = undefined) {
@@ -467,7 +475,7 @@ async function downloadEvent(event, eventType = "main") {
         if (!fs__namespace.existsSync(savePath)) {
             fs__namespace.mkdirSync(savePath);
         }
-        await AddDownload(bestResult.downloadUrl, savePath, name);
+        await AddDownload(bestResult.downloadUrl ?? bestResult.magnetUrl, savePath, name);
     }
 }
 

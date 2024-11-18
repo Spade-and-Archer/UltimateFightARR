@@ -5,7 +5,7 @@ let client = undefined;
 export async function loginToQBit(){
     if(!client){
         client = new qBittorrentClient(
-            process.env.QBIT_URL, //?? `http://localhost:${process.env.QBIT_API_PORT}`,
+            process.env.QBIT_URL ?? `http://localhost:${process.env.QBIT_API_PORT}`,
             process.env.QBIT_API_USERNAME,
             process.env.QBIT_API_PASS
         );
@@ -13,7 +13,8 @@ export async function loginToQBit(){
             process.env.QBIT_API_USERNAME,
             process.env.QBIT_API_PASS
         );
-        await client.app.version();
+        let version = await client.app.version();
+        console.log("connected to Qbit with version:", version)
     }
 
 }

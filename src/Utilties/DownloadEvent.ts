@@ -22,7 +22,7 @@ export async function downloadEvent(event: Event, eventType: EventType="main"){
             fs.mkdirSync(savePath);
         }
         await AddDownload(
-            bestResult.downloadUrl,
+            bestResult.downloadUrl ?? bestResult.magnetUrl,
             savePath,
             name
         )
